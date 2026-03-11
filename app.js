@@ -3,6 +3,8 @@ const express = require('express');
 
 const app = express();
 
+app.use(express.json());
+
 const users = fs.readFileSync();
 
 app.get('/api/v1/users', (req, res) => {
@@ -13,6 +15,26 @@ app.get('/api/v1/users', (req, res) => {
             users
         }
     });
+});
+
+app.post('/api/v1/users', (req, res) => {
+    const newId = users[users.length - 1].id + 1;
+    const newUser = Object.assign({ id: newId }, req.body);
+
+    users.push(newUser);
+
+    fs.writeFile(
+        `${__dirname}/dev-data/data/users-simple.json`,
+        JSON.stringify(users),
+        err => {
+            res.status(201).json({
+                status: 'success',
+                data: {
+                    user: newUser
+                }
+            });
+        }
+    );
 });
 
 const port = 3000;
