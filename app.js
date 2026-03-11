@@ -17,6 +17,27 @@ app.get('/api/v1/users', (req, res) => {
     });
 });
 
+app.get('/api/v1/users/:id', (req, res) => {
+    console.log(req.params);
+
+    const id = req.params.id * 1;
+    const user = users.find(el => el.id === id);
+
+    if (!user) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid ID'
+        });
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user
+        }
+    })
+})
+
 app.post('/api/v1/users', (req, res) => {
     const newId = users[users.length - 1].id + 1;
     const newUser = Object.assign({ id: newId }, req.body);
