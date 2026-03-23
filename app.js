@@ -1,5 +1,6 @@
 const fs = require('fs');
 const express = require('express');
+const { get } = require('http');
 
 const app = express();
 
@@ -7,7 +8,7 @@ app.use(express.json());
 
 const users = fs.readFileSync();
 
-app.get('/api/v1/users', (req, res) => {
+const getAllUsers = (req, res) => {
     res.status(200).json({
         status: 'sucess',
         results: users.length,
@@ -15,9 +16,9 @@ app.get('/api/v1/users', (req, res) => {
             users
         }
     });
-});
+}
 
-app.get('/api/v1/users/:id', (req, res) => {
+const getUser = (req, res) => {
     console.log(req.params);
 
     const id = req.params.id * 1;
@@ -36,9 +37,9 @@ app.get('/api/v1/users/:id', (req, res) => {
             user
         }
     })
-})
+};
 
-app.post('/api/v1/users', (req, res) => {
+const createUser = (req, res) => {
     const newId = users[users.length - 1].id + 1;
     const newUser = Object.assign({ id: newId }, req.body);
 
@@ -56,9 +57,9 @@ app.post('/api/v1/users', (req, res) => {
             });
         }
     );
-});
+};
 
-app.patch('/api/v1/users/:id', (req, res) => {
+const updateUser = (req, res) => {
     if (req.params.id * 1 > users.length) {
         return res.status(404).json({
             status: 'fail',
@@ -72,9 +73,9 @@ app.patch('/api/v1/users/:id', (req, res) => {
             user
         }
     })
-})
+};
 
-app.delete('/api/v1/users/:id', (req, res) => {
+const deleteUser = (req, res) => {
     if (req.params.id * 1 > users.length) {
         return res.status(404).json({
             status: 'fail',
@@ -86,7 +87,19 @@ app.delete('/api/v1/users/:id', (req, res) => {
         status: 'success',
         data: null
     })
-})
+};
+
+app
+.route('/api/v1/users')
+.get(getAllUsers)
+.post(createUser);
+
+app
+.route('/api/v1/users/:id')
+.get(getUser)
+.patch(updateUser)
+.delete(deleteUser)
+
 const port = 3000;
 
 app.listen(port, () => {
