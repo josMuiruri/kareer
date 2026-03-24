@@ -1,3 +1,4 @@
 node_modules
 .prettierrc
 dev-data
+config.env
