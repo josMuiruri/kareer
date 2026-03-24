@@ -1,6 +1,16 @@
 const fs = require('fs')
 const users = fs.readFileSync();
 
+exports.checkID = (req, res, next, val) => {
+    if (req.params.id * 1 > users.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid ID'
+        });
+    }
+    next();
+}
+
 exports.getAllUsers = (req, res) => {
     res.status(200).json({
         status: 'sucess',
@@ -17,12 +27,6 @@ exports.getUser = (req, res) => {
     const id = req.params.id * 1;
     const user = users.find(el => el.id === id);
 
-    if (!user) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID'
-        });
-    }
 
     res.status(200).json({
         status: 'success',
@@ -53,13 +57,7 @@ exports.createUser = (req, res) => {
 };
 
 exports.updateUser = (req, res) => {
-    if (req.params.id * 1 > users.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID'
-        });
-    }
-
+    this.checkID
     res.status(200).json({
         status: 'success',
         data: {
@@ -69,12 +67,6 @@ exports.updateUser = (req, res) => {
 };
 
 exports.deleteUser = (req, res) => {
-    if (req.params.id * 1 > users.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID'
-        });
-    }
 
     res.status(204).json({
         status: 'success',
