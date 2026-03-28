@@ -57,11 +57,11 @@ exports.createUser = (req, res) => {
 };
 
 exports.updateUser = (req, res) => {
-    this.checkID
+   
     res.status(200).json({
         status: 'success',
         data: {
-            user
+            user: 'updated user...'
         }
     })
 };
